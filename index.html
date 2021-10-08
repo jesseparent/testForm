@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+</head>
+
+<body>
+  <!--[if lte IE 8]>
+<script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2-legacy.js"></script>
+<![endif]-->
+  <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
+  <script>
+    hbspt.forms.create({
+      region: "na1",
+      portalId: "5121682",
+      formId: "09ff2b3f-f6b0-4ef1-880c-a58e0ed2830e"
+    });
+  </script>
+</body>
+<script>
+  // Form inputs
+  let inputName = null;
+  let inputEmail = null;
+  let inputBegin = null;
+
+  // Get button style for disabled and enabled
+  let buttonEnabled = "";
+  let buttonDisabled = "border: 1px solid #999999;background-color: #cccccc;color: #666666; cursor: default";
+
+  // Track if name and email have values
+  let formTracker = {};
+
+  // Listen for inputs and enable button if both inputs have values
+  const handleInputs = (event) => {
+    if (event.target.value) {
+      formTracker[event.target.name] = true;
+    } else {
+      formTracker[event.target.name] = false;
+    }
+
+    // Extract any false values from the formTracker
+    const falseValues = Object.values(formTracker).filter(item => !item);
+
+    // Handle button state based on if there are values
+    if (falseValues.length > 0) {
+      // Disable button
+      disableButton();
+    } else {
+      // Enable button
+      enableButton();
+    }
+  };
+
+  const enableButton = () => {
+    inputBegin.disabled = false;
+    inputBegin.setAttribute("style", buttonEnabled);
+  }
+
+  const disableButton = () => {
+    inputBegin.disabled = true;
+    inputBegin.setAttribute("style", buttonDisabled);
+  }
+
+  const setUpListeners = (elements) => {
+    // Track iFrame form elements
+    inputName = elements[0];
+    inputEmail = elements[1];
+    inputBegin = elements[2];
+
+    // Set up form tracker that will determine if name and email have values
+    formTracker[inputName.name] = false;
+    formTracker[inputEmail.name] = false;
+
+    // Set onChange listeners for name and email
+    inputName.onchange = handleInputs;
+    inputEmail.onchange = handleInputs;
+
+    // Store button style in the button enabled
+    buttonEnabled = inputBegin.style;
+
+    // Disable button
+    inputBegin.disabled = true;
+    inputBegin.setAttribute("style", buttonDisabled);
+  };
+
+  // Check for when the Hubspot iFrame loads and has a forms object
+  const checkIframeLoad = setInterval(() => {
+    if (window.frames[0]?.window?.document?.forms[0]) {
+      // Clear interval timer because frame has loaded
+      clearInterval(checkIframeLoad);
+
+      // Set up listeners and form elements
+      setUpListeners(window.frames[0].window.document.forms[0].elements);
+    }
+  }, 500);
+</script>
+
+
+</html>
